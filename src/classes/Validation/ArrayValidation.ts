@@ -41,8 +41,8 @@ extends BaseValidation<Array<T>, ArrayValidator> {
 
     // validate all elements
     rightTypeItems.forEach((_val, idx) => {
-      const _errors = new ValidationFactory({val: _val})
-        .process(childItems)
+      const _errors = new ValidationFactory({schema: childItems})
+        .process(_val)
         .Validation?.errors || [];
 
       if (_errors.length) {

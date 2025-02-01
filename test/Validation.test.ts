@@ -7,6 +7,7 @@ import {
 } from '#types/Validation';
 import {ValidationFactory} from '#classes/Validation';
 import {validationMessages} from '#enums/validation';
+import {ValidationException} from '#exceptions/index';
 
 describe('Validation', () => {
   const factory = new ValidationFactory();
@@ -20,7 +21,7 @@ describe('Validation', () => {
         nullable: false
       }
 
-      factory.setValue(testVal).process(schema);
+      factory.setSchema(schema).process(testVal);
       
       expect(factory.Validation?.errors).toStrictEqual([]);
     })
@@ -28,7 +29,7 @@ describe('Validation', () => {
       [true, true, undefined, validationMessages.REQUIRED()],
       [false, false, null, validationMessages.NULLABLE()],
     ])('should have validation errors', (required, nullable, val, msg) => {
-      factory.setValue(val).process({required, nullable} as BaseValidator);
+      factory.setSchema({type: 'number', required, nullable} as BaseValidator).process(val);
       
       expect(factory.Validation?.errors).toContainEqual(msg);
     })
@@ -43,7 +44,7 @@ describe('Validation', () => {
         maximum: 3,
       }
 
-      factory.setValue(testVal).process(schema);
+      factory.setSchema(schema).process(testVal);
       
       expect(factory.Validation?.errors).toStrictEqual([]);
     })
@@ -51,7 +52,7 @@ describe('Validation', () => {
       [1, undefined, 0, validationMessages.LESS_THAN(1)],
       [undefined, 2, 3, validationMessages.GREATER_THAN(2)],
     ])('should have validation errors', (minimum, maximum, val, msg) => {
-      factory.setValue(val).process({minimum, maximum} as NumberValidator);
+      factory.setSchema({type: 'number', minimum, maximum} as NumberValidator).process(val);
       
       expect(factory.Validation?.errors).toContainEqual(msg);
     })
@@ -66,7 +67,7 @@ describe('Validation', () => {
         maxLength: 8
       }
 
-      factory.setValue(testVal).process(schema);
+      factory.setSchema(schema).process(testVal);
       
       expect(factory.Validation?.errors).toStrictEqual([]);
     })
@@ -74,7 +75,7 @@ describe('Validation', () => {
       [6, 12, 'some long text that is...', validationMessages.LENGTH_GREATER_THAN(12)],
       [6, 10, 'short', validationMessages.LENGTH_LESS_THAN(6)],
     ])('should have validation errors', (minLength, maxLength, val, msg) => {
-      factory.setValue(val).process({minLength, maxLength} as StringValidator);
+      factory.setSchema({type: 'string', minLength, maxLength} as StringValidator).process(val);
       
       expect(factory.Validation?.errors).toContainEqual(msg);
     })
@@ -94,7 +95,7 @@ describe('Validation', () => {
         }
       };
 
-      factory.setValue(testVal).process(schema);
+      factory.setSchema(schema).process(testVal);
       
       expect(factory.Validation?.errors).toStrictEqual([]);
     });
@@ -114,7 +115,7 @@ describe('Validation', () => {
           items: items as NumberValidator
         };
 
-        factory.setValue(testVal).process(schema);
+        factory.setSchema(schema).process(testVal);
         
         expect(factory.Validation?.errors).toContainEqual(msg);
       }
@@ -131,14 +132,14 @@ describe('Validation', () => {
         }
       }
 
-      factory.setValue(testVal).process(schema);
+      factory.setSchema(schema).process(testVal);
 
       expect(factory.Validation?.errors).toContainEqual(
         validationMessages.INVALID_ITEMS_TYPE('number', 'string')
       );
 
       testVal.push({});
-      factory.setValue(testVal).process(schema);
+      factory.setSchema(schema).process(testVal);
 
       expect(factory.Validation?.errors).toContainEqual(
         validationMessages.INVALID_ITEMS_TYPE('number', ['string', 'object'])
@@ -160,7 +161,7 @@ describe('Validation', () => {
         }
       }
 
-      factory.setValue(testVal).process(schema);
+      factory.setSchema(schema).process(testVal);
       expect(factory.Validation?.errors).toContainEqual(
         validationMessages.AT_INDEX(0, [validationMessages.LESS_THAN(1)])
       );
@@ -201,8 +202,48 @@ describe('Validation', () => {
         }
       }
 
-      factory.setValue(testVal).process(schema);
+      factory.setSchema(schema).process(testVal);
       expect(factory.Validation?.errors).toStrictEqual([]);
+    });
+
+    it('should not be ok :)', () => {
+      // const testVal = {
+      //   name: 'John',
+      //   age: 19,
+      //   phoneNumber: 89992281337
+      // };
+      const testVal = 'asda';
+      const schema: ObjectValidator = {
+        type: 'object',
+        additionalProperties: false,
+        requiredProps: [
+          'name',
+          'age'
+        ],
+        properties: {
+          name: {
+            type: 'string',
+            minLength: 3
+          },
+          age: {
+            type: 'number',
+            minimum: 18
+          },
+          phoneNumber: {
+            type: 'number',
+            minimum: 89000000000,
+            maximum: 89999999999
+          }
+        }
+      }
+
+      try {
+        factory.setSchema(schema).process(testVal);
+
+        throw new Error();
+      } catch (err) {
+        expect(err).toBeInstanceOf(ValidationException)
+      }
     });
   })
 });

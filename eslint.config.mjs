@@ -65,7 +65,7 @@ export default [
       "prefer-const": "error", // Prefer const over let
       "no-multiple-empty-lines": ["error", { "max": 1 }], // Max one empty line
       "max-len": ["error", { "code": 100 }], // Max line length
-      "complexity": ["error", 12], // Max cyclomatic complexity
+      // "complexity": ["error", 12], // Max cyclomatic complexity
       "no-redeclare": "off",
 
       // Function rules

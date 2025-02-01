@@ -34,20 +34,20 @@ export default class ObjectValidation extends BaseValidation<AnyObject, ObjectVa
       _errors.length && this.errors.push(validationMessages.ADDITIONAL_PROPS(_errors));
     }
 
-    if (typeof val.properties !== 'object' || !schema.properties) {
+    if (typeof val?.properties !== 'object' || !schema.properties) {
       return;
     }
 
     // TODO: fix magic with || {}. it is nullable for some reason.
-    Object.entries(val.properties || {}).forEach(([_key, _val]) => {
+    Object.entries(val?.properties || {}).forEach(([_key, _val]) => {
       const {[_key]: propSchema} = schema.properties ?? {};
 
       if (!propSchema) {
         return;
       }
 
-      const _errors = new ValidationFactory({val: _val})
-        .process(propSchema)
+      const _errors = new ValidationFactory({schema: propSchema})
+        .process(_val)
         .Validation
         ?.errors || [];
 
