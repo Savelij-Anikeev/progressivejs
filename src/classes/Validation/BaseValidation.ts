@@ -18,11 +18,11 @@ implements Validator<T, D> {
   public validate(val: T, schema: D): void {
     const {required, nullable} = schema;
 
-    if (!isUndefined(required) && required && !val) {
+    if (!isUndefined(required) && required && val === undefined) {
       this.errors.push(validationMessages.REQUIRED());
     }
 
-    if (!isUndefined(nullable) && !nullable && !val) {
+    if (!isUndefined(nullable) && !nullable && val === null) {
       this.errors.push(validationMessages.NULLABLE());
     }
 

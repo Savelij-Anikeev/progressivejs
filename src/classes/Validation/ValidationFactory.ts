@@ -1,4 +1,4 @@
-import {isArray, isPrimitive} from '#utils/types';
+import {isArray} from '#utils/types';
 import {BaseValidator as BaseSchema} from '#types/Validation';
 
 import IntegerValidation from './IntegerValidation';
@@ -18,8 +18,7 @@ export default class ValidationFactory {
   private validator?: BaseValidation;
 
   public constructor({val}: ValidationFactory.Props = {}) {
-    this.val = val;
-    this.validator = ValidationFactory.getValidationBy(val);
+    this.setValue(val);
   }
 
   public get Validation() {
@@ -27,15 +26,16 @@ export default class ValidationFactory {
   };
 
   public process(schema: BaseSchema) {
-    if (isPrimitive(this.val)) {
-      return this.Validation?.validate(this.val, schema); 
-    }
+    this.Validation?.validate(this.val, schema);
+
+    return this;
   }
 
   public setValue(val: unknown) {
     this.val = val;
+    this.validator = ValidationFactory.getValidationBy(val);
 
-    return this.
+    return this;
   }
 
   private static getValidationBy(val: unknown) {
@@ -50,6 +50,8 @@ export default class ValidationFactory {
         return new StringValidation();
       case 'object':
         return new ObjectValidation();
+      default:
+        return new BaseValidation();
     }
   }
 }

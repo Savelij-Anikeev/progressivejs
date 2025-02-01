@@ -8,6 +8,7 @@
     "skipLibCheck": true,                                 /* Skip type checking all .d.ts files. */
     "outDir": "./dist",
     "declaration": true,
+    "sourceMap": true,
     "paths": {
       "#exceptions/*": ["./src/exceptions/*"],
       "#exceptions": ["./src/exceptions/index.ts"],
