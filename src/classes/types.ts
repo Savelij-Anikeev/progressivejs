@@ -1,0 +1,1 @@
+export type Context = Map<unknown, unknown>;

@@ -55,7 +55,7 @@ export default [
       // "@typescript-eslint/no-explicit-any": "error", // Prevent 'any' type
       // "@typescript-eslint/explicit-function-return-type": "error", // Require return types
       "@typescript-eslint/explicit-member-accessibility": "error", // Require accessibility modifiers
-      "@typescript-eslint/no-non-null-assertion": "error", // Prevent non-null assertions
+      // "@typescript-eslint/no-non-null-assertion": "error", // Prevent non-null assertions
 
       // Code style and best practices
       "semi": ["error", "always"], // Require semicolons
@@ -89,6 +89,9 @@ export default [
         "ignoreCase": true,
         "ignoreDeclarationSort": true
       }],
+
+      // classes
+      // "no-dupe-class-members": false,
 
       // Пробелы после if
       "keyword-spacing": ["error", {

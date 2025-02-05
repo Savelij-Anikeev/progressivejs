@@ -13,6 +13,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "loglevel": "^1.9.2",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.3",
@@ -21,6 +22,7 @@
   "devDependencies": {
     "@eslint/js": "^9.19.0",
     "@types/jest": "^29.5.14",
+    "@types/loglevel": "^1.5.4",
     "@types/node": "^22.12.0",
     "@typescript-eslint/eslint-plugin": "^8.22.0",
     "@typescript-eslint/parser": "^8.22.0",
